@@ -13,6 +13,7 @@ const githubPagesBase =
     : "/";
 
 export default defineConfig({
+  nitro: true,
   vite: {
     base: githubPagesBase,
   },
