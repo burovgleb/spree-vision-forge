@@ -48,17 +48,17 @@
 
 :root {
   /* Warm-white luxury palette */
-  --cream: oklch(0.972 0.012 80);          /* warm white */
-  --greige: oklch(0.89 0.014 75);          /* greige */
-  --stone: oklch(0.78 0.018 70);           /* warm stone */
-  --chocolate: oklch(0.32 0.035 50);       /* deep chocolate */
-  --cognac: oklch(0.58 0.10 50);           /* cognac leather */
-  --noir: oklch(0.16 0.008 60);            /* deep dark for hero blocks */
-  --ink: oklch(0.22 0.012 60);             /* body ink */
+  --cream: oklch(0.972 0.012 80); /* warm white */
+  --greige: oklch(0.89 0.014 75); /* greige */
+  --stone: oklch(0.78 0.018 70); /* warm stone */
+  --chocolate: oklch(0.32 0.035 50); /* deep chocolate */
+  --cognac: oklch(0.58 0.1 50); /* cognac leather */
+  --noir: oklch(0.16 0.008 60); /* deep dark for hero blocks */
+  --ink: oklch(0.22 0.012 60); /* body ink */
 
-  --malachite: oklch(0.42 0.10 165);
+  --malachite: oklch(0.42 0.1 165);
   --scarlet: oklch(0.46 0.14 28);
-  --sapphire: oklch(0.34 0.10 255);
+  --sapphire: oklch(0.34 0.1 255);
   --dune: oklch(0.74 0.07 75);
 
   --background: var(--cream);
@@ -75,7 +75,7 @@
   --muted-foreground: oklch(0.45 0.018 65);
   --accent: var(--cognac);
   --accent-foreground: var(--cream);
-  --destructive: oklch(0.55 0.20 25);
+  --destructive: oklch(0.55 0.2 25);
   --destructive-foreground: var(--cream);
   --border: oklch(0.86 0.014 70);
   --input: oklch(0.86 0.014 70);
@@ -98,13 +98,18 @@
     -webkit-font-smoothing: antialiased;
     text-rendering: optimizeLegibility;
   }
-  h1, h2, h3, h4 {
+  h1,
+  h2,
+  h3,
+  h4 {
     font-family: var(--font-display);
     font-weight: 400;
-    letter-spacing: -0.01em;
+    letter-spacing: 0;
     color: var(--ink);
   }
-  .font-display { font-family: var(--font-display); }
+  .font-display {
+    font-family: var(--font-display);
+  }
   .eyebrow {
     font-family: var(--font-sans);
     font-size: 11px;
@@ -123,7 +128,9 @@
     padding-inline: 1.5rem;
   }
   @media (min-width: 768px) {
-    .container-luxe { padding-inline: 3rem; }
+    .container-luxe {
+      padding-inline: 3rem;
+    }
   }
 
   .btn-primary {
@@ -136,9 +143,13 @@
     font-size: 13px;
     letter-spacing: 0.14em;
     text-transform: uppercase;
-    transition: background 0.3s ease, transform 0.3s ease;
+    transition:
+      background 0.3s ease,
+      transform 0.3s ease;
   }
-  .btn-primary:hover { background: var(--cognac); }
+  .btn-primary:hover {
+    background: var(--cognac);
+  }
 
   .btn-ghost {
     display: inline-flex;
@@ -149,9 +160,14 @@
     font-size: 13px;
     letter-spacing: 0.14em;
     text-transform: uppercase;
-    transition: background 0.3s ease, color 0.3s ease;
+    transition:
+      background 0.3s ease,
+      color 0.3s ease;
   }
-  .btn-ghost:hover { background: var(--ink); color: var(--cream); }
+  .btn-ghost:hover {
+    background: var(--ink);
+    color: var(--cream);
+  }
 
   .hairline {
     height: 1px;
