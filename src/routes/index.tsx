@@ -1,6 +1,6 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { ArrowRight } from "lucide-react";
-import { useState } from "react";
+import { useRef, useState, type FormEvent } from "react";
 import castleAsset from "@/assets/cache-castle.jpg";
 import collectionBaseAsset from "@/assets/catalog/base-greige-1.jpg";
 import collectionExtraordinaryAsset from "@/assets/catalog/home-extraordinary-8275.jpg";
@@ -14,6 +14,7 @@ import materialsOstrichAsset from "@/assets/cache-materials-ostrich.jpg";
 import materialsPaletteAsset from "@/assets/cache-materials-palette.jpg";
 import testingAsset from "@/assets/cache-testing.jpg";
 import { useHideOnScroll } from "@/lib/use-hide-on-scroll";
+import { submitFeedback } from "@/lib/feedback";
 
 export const Route = createFileRoute("/")({
   head: () => ({
@@ -638,7 +639,51 @@ function Philosophy() {
 /* ───────────────────────── CTA ───────────────────────── */
 
 function CTA() {
-  const [sent, setSent] = useState(false);
+  const [status, setStatus] = useState<"idle" | "submitting" | "sent" | "error">("idle");
+  const [errorMessage, setErrorMessage] = useState("");
+  const submitting = useRef(false);
+
+  async function handleSubmit(event: FormEvent<HTMLFormElement>) {
+    event.preventDefault();
+    if (submitting.current) return;
+
+    const form = event.currentTarget;
+    const formData = new FormData(form);
+    submitting.current = true;
+    setStatus("submitting");
+    setErrorMessage("");
+
+    try {
+      await submitFeedback({
+        submissionId: crypto.randomUUID(),
+        formType: "general",
+        name: String(formData.get("name") ?? "").trim(),
+        contact: String(formData.get("contact") ?? "").trim(),
+        interests: formData.getAll("interest").map(String),
+        comment: String(formData.get("comment") ?? "").trim(),
+        pageUrl: window.location.href,
+        website: String(formData.get("website") ?? ""),
+      });
+
+      form.reset();
+      setStatus("sent");
+    } catch (error) {
+      setErrorMessage(
+        error instanceof Error && error.message === "FORM_NOT_CONFIGURED"
+          ? "Форма пока не настроена. Пожалуйста, свяжитесь с нами по email или в мессенджере."
+          : "Не удалось отправить заявку. Проверьте соединение и попробуйте ещё раз.",
+      );
+      setStatus("error");
+    } finally {
+      submitting.current = false;
+    }
+  }
+
+  function resetForm() {
+    setStatus("idle");
+    setErrorMessage("");
+  }
+
   return (
     <section id="contact" className="bg-background">
       <div className="container-luxe py-20 md:py-32 grid md:grid-cols-12 gap-12">
@@ -674,22 +719,31 @@ function CTA() {
         </div>
         <form
           className="md:col-span-7 bg-greige/40 p-8 md:p-12 border border-border space-y-6"
-          onSubmit={(e) => {
-            e.preventDefault();
-            setSent(true);
-          }}
+          onSubmit={handleSubmit}
         >
-          {sent ? (
+          {status === "sent" ? (
             <div className="py-16 text-center">
               <p className="font-display text-3xl mb-3">Спасибо.</p>
               <p className="text-muted-foreground">Мы свяжемся с вами в ближайшее время.</p>
+              <button type="button" className="btn-ghost mt-8" onClick={resetForm}>
+                Отправить ещё одну заявку
+              </button>
             </div>
           ) : (
             <>
-              <Field label="Имя" name="name" required />
-              <Field label="Телефон, Telegram или email" name="contact" required />
+              <div className="absolute -left-[9999px] h-px w-px overflow-hidden" aria-hidden="true">
+                <label htmlFor="website">Не заполняйте это поле</label>
+                <input id="website" name="website" tabIndex={-1} autoComplete="off" />
+              </div>
+              <Field label="Имя" name="name" autoComplete="name" required />
+              <Field
+                label="Телефон, Telegram или email"
+                name="contact"
+                autoComplete="email"
+                required
+              />
               <div>
-                <label className="eyebrow block mb-3">Что интересно</label>
+                <p className="eyebrow block mb-3">Что интересно</p>
                 <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
                   {[
                     "Base",
@@ -710,15 +764,31 @@ function CTA() {
                 </div>
               </div>
               <div>
-                <label className="eyebrow block mb-2">Комментарий</label>
+                <label htmlFor="comment" className="eyebrow block mb-2">
+                  Комментарий
+                </label>
                 <textarea
+                  id="comment"
                   name="comment"
+                  maxLength={1500}
                   rows={4}
                   className="w-full bg-background border border-border px-4 py-3 text-[15px] focus:outline-none focus:border-ink resize-none"
                 />
               </div>
-              <button type="submit" className="btn-primary w-full justify-center">
-                Отправить заявку
+              {status === "error" && (
+                <p
+                  role="alert"
+                  className="border border-destructive/30 bg-destructive/5 p-3 text-sm text-destructive"
+                >
+                  {errorMessage}
+                </p>
+              )}
+              <button
+                type="submit"
+                className="btn-primary w-full justify-center disabled:cursor-wait disabled:opacity-60"
+                disabled={status === "submitting"}
+              >
+                {status === "submitting" ? "Отправляем…" : "Отправить заявку"}
               </button>
               <p className="text-xs text-muted-foreground">
                 Отправляя форму, вы соглашаетесь на обработку персональных данных.
@@ -731,15 +801,30 @@ function CTA() {
   );
 }
 
-function Field({ label, name, required }: { label: string; name: string; required?: boolean }) {
+function Field({
+  label,
+  name,
+  required,
+  autoComplete,
+  maxLength,
+}: {
+  label: string;
+  name: string;
+  required?: boolean;
+  autoComplete?: string;
+  maxLength?: number;
+}) {
   return (
     <div>
-      <label className="eyebrow block mb-2">
+      <label htmlFor={name} className="eyebrow block mb-2">
         {label} {required && <span className="text-cognac">*</span>}
       </label>
       <input
+        id={name}
         name={name}
         required={required}
+        autoComplete={autoComplete}
+        maxLength={maxLength ?? (name === "name" ? 120 : 200)}
         className="w-full bg-background border border-border px-4 py-3 text-[15px] focus:outline-none focus:border-ink"
       />
     </div>
