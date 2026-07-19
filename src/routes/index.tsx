@@ -2,9 +2,9 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { ArrowRight } from "lucide-react";
 import { useState } from "react";
 import castleAsset from "@/assets/cache-castle.jpg";
-import collectionBaseAsset from "@/assets/cache-collection-base.jpg";
-import collectionExtraordinaryAsset from "@/assets/cache-collection-extraordinary-malachite.jpg";
-import collectionRareAsset from "@/assets/cache-collection-rare.jpg";
+import collectionBaseAsset from "@/assets/catalog/base-greige-1.jpg";
+import collectionExtraordinaryAsset from "@/assets/catalog/home-extraordinary-8275.jpg";
+import collectionRareAsset from "@/assets/catalog/rare-onyx-5.jpg";
 import founderAlexeyAsset from "@/assets/cache-founder-alexey.jpg";
 import founderDariaAsset from "@/assets/cache-founder-daria.jpg";
 import heroAsset from "@/assets/cache-hero-edited.png";
@@ -13,6 +13,7 @@ import insertSAsset from "@/assets/cache-insert-s.jpg";
 import materialsOstrichAsset from "@/assets/cache-materials-ostrich.jpg";
 import materialsPaletteAsset from "@/assets/cache-materials-palette.jpg";
 import testingAsset from "@/assets/cache-testing.jpg";
+import { useHideOnScroll } from "@/lib/use-hide-on-scroll";
 
 export const Route = createFileRoute("/")({
   head: () => ({
@@ -34,16 +35,16 @@ const collectionCards = [
     filter: "Base" as const,
     caption: "Base S · Грейдж",
     image: collectionBaseAsset,
-    alt: "Футляр Caché Base в оттенке грейдж с ложементами на мраморных блоках",
+    alt: "Футляр Caché Base в оттенке грейдж с ложементами на каменных блоках",
     text: "Спокойная базовая линия с мягкой природной палитрой, чистой формой и акцентом на ежедневное бережное хранение.",
     details: ["Кожа козы и замша телёнка", "Размеры S и M", "Никель или золото"],
   },
   {
     name: "Extraordinary",
     filter: "Extraordinary" as const,
-    caption: "Extraordinary · Малахит",
+    caption: "Extraordinary",
     image: collectionExtraordinaryAsset,
-    alt: "Зелёный футляр Caché Extraordinary в оттенке Малахит на каменной подставке",
+    alt: "Футляр Caché Extraordinary на тёмном скульптурном объекте",
     text: "Выразительные сезонные выпуски, где фактура кожи, замши, нитей и металла собирается в более редкое цветовое решение.",
     details: [
       "Кожа страуса и замша козы",
@@ -56,7 +57,7 @@ const collectionCards = [
     filter: "Rare" as const,
     caption: "Rare · Чёрный оникс",
     image: collectionRareAsset,
-    alt: "Чёрный футляр Caché Rare на белых подставках",
+    alt: "Чёрный футляр Caché Rare среди ветвей и зелени",
     text: "Индивидуальные изделия под конкретную коллекцию, украшение или сценарий хранения, включая нестандартную архитектуру ложементов.",
     details: ["Личная встреча и интервью", "Подбор кожи, замши и металла", "Ложементы под задачу"],
   },
@@ -117,6 +118,7 @@ function CachePage() {
 
 function Header() {
   const [open, setOpen] = useState(false);
+  const hidden = useHideOnScroll();
   const links = [
     { href: "#about", label: "О Caché" },
     { href: "#purpose", label: "Назначение" },
@@ -125,7 +127,9 @@ function Header() {
     { href: "#contact", label: "Знакомство с Caché" },
   ];
   return (
-    <header className="sticky top-0 z-40 backdrop-blur-md bg-[color-mix(in_oklab,var(--cream)_85%,transparent)] border-b border-border">
+    <header
+      className={`site-header sticky top-0 z-40 backdrop-blur-md bg-[color-mix(in_oklab,var(--cream)_85%,transparent)] border-b border-border ${hidden && !open ? "is-hidden" : ""}`}
+    >
       <div className="container-luxe flex items-center justify-between h-16 md:h-20">
         <a href="#top" className="flex flex-col leading-none">
           <span className="font-display text-3xl md:text-[34px] tracking-wide">Caché</span>

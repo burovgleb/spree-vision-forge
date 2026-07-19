@@ -25,17 +25,21 @@ const catalogImages = import.meta.glob<string>("../assets/catalog/*.jpg", {
 const image = (file: string) => catalogImages[`../assets/catalog/${file}`];
 const gallery = (...files: string[]) => files.map(image);
 
-const baseGreige = gallery("base-greige-1.jpg", "base-greige-2.jpg", "base-greige-3.jpg");
-const baseNamib = gallery("base-namib-1.jpg", "base-namib-2.jpg", "base-namib-3.jpg");
+const baseGreigeS = gallery("base-greige-1.jpg", "base-greige-2.jpg", "base-greige-3.jpg");
+const baseGreigeM = gallery("base-greige-m.jpg", "base-greige-m-2.jpg", "base-greige-m-3.jpg");
+const baseNamibS = gallery("base-namib-1.jpg", "base-namib-2.jpg", "base-namib-s-detail.jpg");
+const baseNamibM = gallery("base-namib-m.jpg", "base-namib-3.jpg", "base-namib-m-2.jpg");
 const baseChocolate = gallery(
   "base-chocolate-1.jpg",
   "base-chocolate-2.jpg",
   "base-chocolate-3.jpg",
 );
-const denim = gallery("extra-denim-1.jpg", "extra-denim-2.jpg", "extra-denim-3.jpg");
+const denimS = gallery("extra-denim-1.jpg", "extra-denim-2.jpg", "extra-denim-s-detail.jpg");
+const denimM = gallery("extra-denim-m.jpg", "extra-denim-3.jpg", "extra-denim-m-2.jpg");
 const taupe = gallery("extra-taupe-1.jpg", "extra-taupe-2.jpg", "extra-taupe-3.jpg");
 const granat = gallery("extra-granat-1.jpg", "extra-granat-2.jpg", "extra-granat-dark.jpg");
-const dune = gallery("extra-dune-1.jpg", "extra-dune-2.jpg", "extra-dune-3.jpg");
+const duneS = gallery("extra-dune-1.jpg", "extra-dune-2.jpg", "extra-dune-s-detail.jpg");
+const duneM = gallery("extra-dune-m.jpg", "extra-dune-3.jpg", "extra-dune-m-2.jpg");
 const cinnamon = gallery("extra-cinnamon-1.jpg", "extra-cinnamon-2.jpg", "extra-cinnamon-3.jpg");
 const jungle = gallery("extra-jungle-1.jpg", "extra-jungle-2.jpg", "extra-jungle-3.jpg");
 const malachite = gallery(
@@ -43,9 +47,33 @@ const malachite = gallery(
   "extra-malachite-2.jpg",
   "extra-malachite-3.jpg",
 );
-const scarlett = gallery("extra-scarlett-1.jpg", "extra-scarlett-2.jpg", "extra-scarlett-3.jpg");
-const sapphire = gallery("extra-sapphire-1.jpg", "extra-sapphire-2.jpg", "extra-sapphire-3.jpg");
-const onyx = gallery("rare-onyx-1.jpg", "rare-onyx-2.jpg", "rare-onyx-3.jpg");
+const scarlettS = gallery(
+  "extra-scarlett-1.jpg",
+  "extra-scarlett-2.jpg",
+  "extra-scarlett-s-detail.jpg",
+);
+const scarlettM = gallery("extra-scarlett-m.jpg", "extra-scarlett-3.jpg", "extra-scarlett-m-2.jpg");
+const sapphireS = gallery(
+  "extra-sapphire-1.jpg",
+  "extra-sapphire-2.jpg",
+  "extra-sapphire-s-detail.jpg",
+);
+const sapphireM = gallery(
+  "extra-sapphire-m-1.jpg",
+  "extra-sapphire-3.jpg",
+  "extra-sapphire-m-2.jpg",
+);
+const onyx = gallery(
+  "rare-onyx-4.jpg",
+  "rare-onyx-1.jpg",
+  "rare-onyx-2.jpg",
+  "rare-onyx-7.jpg",
+  "rare-onyx-6.jpg",
+  "rare-onyx-5.jpg",
+  "rare-onyx-3.jpg",
+  "rare-onyx-8.jpg",
+  "rare-onyx-9.jpg",
+);
 
 export const catalogProducts: CatalogProduct[] = [
   {
@@ -57,7 +85,7 @@ export const catalogProducts: CatalogProduct[] = [
     metal: "Никель",
     price: 265000,
     cardImage: image("base-greige-2.jpg"),
-    images: baseGreige,
+    images: baseGreigeS,
     tone: "#aaa198",
     presentation: true,
   },
@@ -70,7 +98,7 @@ export const catalogProducts: CatalogProduct[] = [
     metal: "Никель",
     price: 350000,
     cardImage: image("base-greige-m.jpg"),
-    images: [image("base-greige-m.jpg"), ...baseGreige],
+    images: baseGreigeM,
     tone: "#aaa198",
   },
   {
@@ -82,7 +110,7 @@ export const catalogProducts: CatalogProduct[] = [
     metal: "Золото",
     price: 265000,
     cardImage: image("base-namib-2.jpg"),
-    images: baseNamib,
+    images: baseNamibS,
     tone: "#a56e47",
   },
   {
@@ -94,7 +122,7 @@ export const catalogProducts: CatalogProduct[] = [
     metal: "Золото",
     price: 350000,
     cardImage: image("base-namib-m.jpg"),
-    images: [image("base-namib-m.jpg"), ...baseNamib],
+    images: baseNamibM,
     tone: "#a56e47",
   },
   {
@@ -119,7 +147,7 @@ export const catalogProducts: CatalogProduct[] = [
     metal: "Золото",
     price: 285000,
     cardImage: image("extra-denim-2.jpg"),
-    images: denim,
+    images: denimS,
     tone: "#687783",
   },
   {
@@ -131,7 +159,7 @@ export const catalogProducts: CatalogProduct[] = [
     metal: "Золото",
     price: 395000,
     cardImage: image("extra-denim-m.jpg"),
-    images: [image("extra-denim-m.jpg"), ...denim],
+    images: denimM,
     tone: "#687783",
   },
   {
@@ -168,7 +196,7 @@ export const catalogProducts: CatalogProduct[] = [
     metal: "Золото",
     price: 360000,
     cardImage: image("extra-dune-2.jpg"),
-    images: dune,
+    images: duneS,
     tone: "#bd8b5e",
   },
   {
@@ -180,7 +208,7 @@ export const catalogProducts: CatalogProduct[] = [
     metal: "Золото",
     price: 495000,
     cardImage: image("extra-dune-m.jpg"),
-    images: [image("extra-dune-m.jpg"), ...dune],
+    images: duneM,
     tone: "#bd8b5e",
   },
   {
@@ -204,7 +232,7 @@ export const catalogProducts: CatalogProduct[] = [
     metal: "Никель",
     price: 285000,
     cardImage: image("extra-scarlett-2.jpg"),
-    images: scarlett,
+    images: scarlettS,
     tone: "#bf1c2c",
   },
   {
@@ -216,7 +244,7 @@ export const catalogProducts: CatalogProduct[] = [
     metal: "Никель",
     price: 395000,
     cardImage: image("extra-scarlett-m.jpg"),
-    images: [image("extra-scarlett-m.jpg"), ...scarlett],
+    images: scarlettM,
     tone: "#bf1c2c",
     presentation: true,
   },
@@ -253,7 +281,7 @@ export const catalogProducts: CatalogProduct[] = [
     metal: "Никель",
     price: 285000,
     cardImage: image("extra-sapphire-2.jpg"),
-    images: sapphire,
+    images: sapphireS,
     tone: "#273653",
   },
   {
@@ -264,8 +292,8 @@ export const catalogProducts: CatalogProduct[] = [
     materials: "Кожа козы, замша козы",
     metal: "Никель",
     price: 395000,
-    cardImage: image("extra-sapphire-3.jpg"),
-    images: sapphire,
+    cardImage: image("extra-sapphire-m-1.jpg"),
+    images: sapphireM,
     tone: "#273653",
   },
   {
@@ -276,7 +304,7 @@ export const catalogProducts: CatalogProduct[] = [
     materials: "Материалы подбираются индивидуально",
     metal: "Фурнитура на заказ",
     price: null,
-    cardImage: image("rare-onyx-1.jpg"),
+    cardImage: image("rare-onyx-4.jpg"),
     images: onyx,
     tone: "#161412",
     presentation: true,

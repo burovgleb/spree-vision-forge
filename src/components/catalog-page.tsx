@@ -18,6 +18,7 @@ import {
   type CollectionFilter,
   type SizeFilter,
 } from "@/lib/catalog-routing";
+import { useHideOnScroll } from "@/lib/use-hide-on-scroll";
 
 const collectionFilters: CollectionFilter[] = ["Все", "Base", "Extraordinary", "Rare"];
 const sizeFilters: SizeFilter[] = ["Все", "S", "M"];
@@ -35,6 +36,7 @@ export function CatalogPage({
   onSearchChange,
   onCloseProduct,
 }: CatalogPageProps) {
+  const headerHidden = useHideOnScroll();
   const collection: CollectionFilter = search.collection ?? "Все";
   const size: SizeFilter = search.size ?? "Все";
   const selectedProduct = selectedProductId
@@ -52,8 +54,10 @@ export function CatalogPage({
   );
 
   return (
-    <div className="catalog-page min-h-screen bg-background text-foreground">
-      <CatalogHeader />
+    <div
+      className={`catalog-page min-h-screen bg-background text-foreground ${headerHidden ? "is-header-hidden" : ""}`}
+    >
+      <CatalogHeader hidden={headerHidden} />
       <main>
         <section id="catalog" className="catalog-shell catalog-shell-page pb-24 md:pb-36">
           <div className="catalog-intro">
@@ -95,9 +99,9 @@ export function CatalogPage({
   );
 }
 
-function CatalogHeader() {
+function CatalogHeader({ hidden }: { hidden: boolean }) {
   return (
-    <header className="catalog-header">
+    <header className={`catalog-header ${hidden ? "is-hidden" : ""}`}>
       <div className="container-luxe catalog-header-inner">
         <Link
           to="/"
@@ -111,7 +115,6 @@ function CatalogHeader() {
         </Link>
         <div className="catalog-header-meta">
           <span>Каталог 2026</span>
-          <a href="mailto:hello@cache-maison.com">Связаться</a>
         </div>
       </div>
     </header>
@@ -178,6 +181,7 @@ function ProductCard({
         to="/catalog/$productId"
         params={{ productId: product.id }}
         search={search}
+        state={{ fromCatalog: true }}
         className="catalog-card-button"
       >
         <span className="catalog-card-image">
@@ -348,35 +352,37 @@ function ProductDetails({
 
   return (
     <aside className="product-details">
-      <div className="product-details-heading">
-        <div className="product-details-kicker">
-          <span>{product.collection}</span>
-          <span className="product-tone" style={{ backgroundColor: product.tone }} />
+      <div className="product-details-scroll">
+        <div className={`product-details-heading ${product.color.length > 10 ? "is-long" : ""}`}>
+          <div className="product-details-kicker">
+            <span>{product.collection}</span>
+            <span className="product-tone" style={{ backgroundColor: product.tone }} />
+          </div>
+          <h2>{product.color}</h2>
+          <p className="product-size-label">Размер {product.size}</p>
         </div>
-        <h2>{product.color}</h2>
-        <p className="product-size-label">Размер {product.size}</p>
-      </div>
-      <p className="product-description">{description}</p>
-      <dl className="product-specs">
-        <div>
-          <dt>Материалы</dt>
-          <dd>{product.materials}</dd>
+        <p className="product-description">{description}</p>
+        <dl className="product-specs">
+          <div>
+            <dt>Материалы</dt>
+            <dd>{product.materials}</dd>
+          </div>
+          <div>
+            <dt>Металл</dt>
+            <dd>{product.metal}</dd>
+          </div>
+          <div>
+            <dt>Комплектация</dt>
+            <dd>Футляр и набор вынимающихся ложементов</dd>
+          </div>
+        </dl>
+        <div className="product-care-note">
+          <span>01</span>
+          <p>
+            Внутренняя фиксация исключает соприкосновение украшений и бережно удерживает их во время
+            хранения и транспортировки.
+          </p>
         </div>
-        <div>
-          <dt>Металл</dt>
-          <dd>{product.metal}</dd>
-        </div>
-        <div>
-          <dt>Комплектация</dt>
-          <dd>Футляр и набор вынимающихся ложементов</dd>
-        </div>
-      </dl>
-      <div className="product-care-note">
-        <span>01</span>
-        <p>
-          Внутренняя фиксация исключает соприкосновение украшений и бережно удерживает их во время
-          хранения и транспортировки.
-        </p>
       </div>
       <div className="product-purchase">
         <div>
@@ -384,7 +390,7 @@ function ProductDetails({
           <strong>{formatPrice(product.price)}</strong>
         </div>
         <button type="button" onClick={onInquiry}>
-          {product.custom ? "Обсудить создание" : "Оставить заявку"}
+          Оставить заявку
           <ArrowRight size={18} strokeWidth={1.4} />
         </button>
       </div>
