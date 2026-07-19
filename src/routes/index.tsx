@@ -1,4 +1,5 @@
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, Link } from "@tanstack/react-router";
+import { ArrowRight } from "lucide-react";
 import { useState } from "react";
 import castleAsset from "@/assets/cache-castle.jpg";
 import collectionBaseAsset from "@/assets/cache-collection-base.jpg";
@@ -30,6 +31,7 @@ export const Route = createFileRoute("/")({
 const collectionCards = [
   {
     name: "Base",
+    filter: "Base" as const,
     caption: "Base S · Грейдж",
     image: collectionBaseAsset,
     alt: "Футляр Caché Base в оттенке грейдж с ложементами на мраморных блоках",
@@ -38,6 +40,7 @@ const collectionCards = [
   },
   {
     name: "Extraordinary",
+    filter: "Extraordinary" as const,
     caption: "Extraordinary · Малахит",
     image: collectionExtraordinaryAsset,
     alt: "Зелёный футляр Caché Extraordinary в оттенке Малахит на каменной подставке",
@@ -50,6 +53,7 @@ const collectionCards = [
   },
   {
     name: "Rare",
+    filter: "Rare" as const,
     caption: "Rare · Чёрный оникс",
     image: collectionRareAsset,
     alt: "Чёрный футляр Caché Rare на белых подставках",
@@ -136,9 +140,9 @@ function Header() {
             </a>
           ))}
         </nav>
-        <a href="#contact" className="hidden lg:inline-flex btn-primary">
-          Запросить каталог
-        </a>
+        <Link to="/catalog" className="hidden lg:inline-flex btn-primary">
+          Каталог
+        </Link>
         <button className="lg:hidden p-2" onClick={() => setOpen((v) => !v)} aria-label="Меню">
           <div className="space-y-1.5">
             <span className="block w-6 h-px bg-ink" />
@@ -155,13 +159,13 @@ function Header() {
                 {l.label}
               </a>
             ))}
-            <a
-              href="#contact"
+            <Link
+              to="/catalog"
               onClick={() => setOpen(false)}
               className="btn-primary justify-center mt-2"
             >
-              Запросить каталог
-            </a>
+              Каталог
+            </Link>
           </div>
         </div>
       )}
@@ -196,9 +200,9 @@ function Hero() {
             способы хранения, которые подвергают риску драгоценности.
           </p>
           <div className="mt-10 flex flex-wrap gap-3">
-            <a href="#contact" className="btn-primary">
-              Запросить каталог
-            </a>
+            <Link to="/catalog" className="btn-primary">
+              Каталог
+            </Link>
             <a href="#collections" className="btn-ghost">
               Смотреть коллекции
             </a>
@@ -213,11 +217,22 @@ function Hero() {
               height={1536}
               className="w-full h-full object-cover"
             />
-            <div className="absolute bottom-0 left-0 right-0 p-6 md:p-8 bg-gradient-to-t from-black/60 to-transparent">
-              <p className="eyebrow text-cream/80">Extraordinary M · Малахит</p>
-              <p className="font-display text-cream text-2xl mt-1">
-                Каждое украшение на своём месте
-              </p>
+            <div className="absolute bottom-0 left-0 right-0 p-6 md:p-8 bg-gradient-to-t from-black/70 to-transparent flex items-end justify-between gap-5">
+              <div>
+                <p className="eyebrow text-cream/80">Extraordinary · Малахит</p>
+                <p className="font-display text-cream text-2xl mt-1">
+                  Каждое украшение на своём месте
+                </p>
+              </div>
+              <Link
+                to="/catalog/$productId"
+                params={{ productId: "extra-malachite-s" }}
+                search={{ collection: "Extraordinary" }}
+                className="flex shrink-0 items-center gap-2 border-b border-cream/70 pb-1 text-[10px] uppercase tracking-[0.15em] text-cream transition-colors hover:border-cream/40 hover:text-cream/75"
+              >
+                Рассмотреть
+                <ArrowRight size={15} strokeWidth={1.4} />
+              </Link>
             </div>
           </div>
         </div>
@@ -417,31 +432,46 @@ function Collections() {
         <div className="grid lg:grid-cols-3 gap-6">
           {collectionCards.map((card) => (
             <article key={card.name} className="border border-border bg-background">
-              <div className="aspect-[4/3] overflow-hidden bg-greige">
-                <img
-                  src={card.image}
-                  alt={card.alt}
-                  width={1587}
-                  height={1059}
-                  loading="lazy"
-                  className="w-full h-full object-cover"
-                />
-              </div>
-              <div className="p-6 md:p-7">
-                <p className="eyebrow mb-3">{card.caption}</p>
-                <h3 className="font-display text-3xl mb-4">{card.name}</h3>
-                <p className="text-[15px] text-muted-foreground leading-relaxed mb-6">
-                  {card.text}
-                </p>
-                <ul className="space-y-3 text-[14px] text-ink/85">
-                  {card.details.map((detail) => (
-                    <li key={detail} className="flex gap-3 border-t border-border pt-3">
-                      <span className="font-display text-cognac">—</span>
-                      <span>{detail}</span>
-                    </li>
-                  ))}
-                </ul>
-              </div>
+              <Link
+                to="/catalog"
+                search={{ collection: card.filter }}
+                className="group block h-full"
+                aria-label={`Открыть коллекцию ${card.name} в каталоге`}
+              >
+                <div className="aspect-[4/3] overflow-hidden bg-greige">
+                  <img
+                    src={card.image}
+                    alt={card.alt}
+                    width={1587}
+                    height={1059}
+                    loading="lazy"
+                    className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-[1.025]"
+                  />
+                </div>
+                <div className="p-6 md:p-7">
+                  <p className="eyebrow mb-3">{card.caption}</p>
+                  <h3 className="font-display text-3xl mb-4">{card.name}</h3>
+                  <p className="text-[15px] text-muted-foreground leading-relaxed mb-6">
+                    {card.text}
+                  </p>
+                  <ul className="space-y-3 text-[14px] text-ink/85">
+                    {card.details.map((detail) => (
+                      <li key={detail} className="flex gap-3 border-t border-border pt-3">
+                        <span className="font-display text-cognac">—</span>
+                        <span>{detail}</span>
+                      </li>
+                    ))}
+                  </ul>
+                  <span className="mt-7 flex items-center justify-between border-t border-border pt-4 text-[10px] uppercase tracking-[0.15em]">
+                    Смотреть в каталоге
+                    <ArrowRight
+                      size={16}
+                      strokeWidth={1.4}
+                      className="transition-transform group-hover:translate-x-1"
+                    />
+                  </span>
+                </div>
+              </Link>
             </article>
           ))}
         </div>
