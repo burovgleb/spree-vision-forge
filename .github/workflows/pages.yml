@@ -36,6 +36,7 @@ jobs:
       - name: Build
         env:
           GITHUB_PAGES: "true"
+          VITE_GOOGLE_SCRIPT_URL: ${{ vars.VITE_GOOGLE_SCRIPT_URL }}
         run: bun run build:pages
 
       - name: Upload Pages artifact

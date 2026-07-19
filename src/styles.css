@@ -1157,6 +1157,19 @@
   border-color: var(--ink);
 }
 
+.inquiry-submit:disabled {
+  cursor: wait;
+  opacity: 0.6;
+}
+
+.inquiry-error {
+  border-left: 2px solid var(--destructive);
+  padding: 8px 12px;
+  color: var(--destructive);
+  font-size: 11px;
+  line-height: 1.5;
+}
+
 .inquiry-privacy {
   color: var(--muted-foreground);
   font-size: 9px;

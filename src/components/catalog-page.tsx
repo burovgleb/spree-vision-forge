@@ -10,7 +10,7 @@ import {
   Plus,
   X,
 } from "lucide-react";
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState, type FormEvent } from "react";
 import { catalogProducts, formatPrice, type CatalogProduct } from "@/data/catalog";
 import {
   toCatalogSearch,
@@ -19,6 +19,7 @@ import {
   type SizeFilter,
 } from "@/lib/catalog-routing";
 import { useHideOnScroll } from "@/lib/use-hide-on-scroll";
+import { submitFeedback } from "@/lib/feedback";
 
 const collectionFilters: CollectionFilter[] = ["Все", "Base", "Extraordinary", "Rare"];
 const sizeFilters: SizeFilter[] = ["Все", "S", "M"];
@@ -478,7 +479,51 @@ function ZoomViewer({
 }
 
 function InquiryPanel({ product, onClose }: { product: CatalogProduct; onClose: () => void }) {
-  const [sent, setSent] = useState(false);
+  const [status, setStatus] = useState<"idle" | "submitting" | "sent" | "error">("idle");
+  const [errorMessage, setErrorMessage] = useState("");
+  const submitting = useRef(false);
+
+  async function handleSubmit(event: FormEvent<HTMLFormElement>) {
+    event.preventDefault();
+    if (submitting.current) return;
+
+    const formData = new FormData(event.currentTarget);
+    submitting.current = true;
+    setStatus("submitting");
+    setErrorMessage("");
+
+    try {
+      await submitFeedback({
+        submissionId: crypto.randomUUID(),
+        formType: "product",
+        name: String(formData.get("name") ?? "").trim(),
+        contact: String(formData.get("contact") ?? "").trim(),
+        interests: [product.collection],
+        comment: String(formData.get("comment") ?? "").trim(),
+        pageUrl: window.location.href,
+        website: String(formData.get("website") ?? ""),
+        product: {
+          id: product.id,
+          collection: product.collection,
+          color: product.color,
+          size: product.size,
+          price: formatPrice(product.price),
+        },
+      });
+
+      setStatus("sent");
+    } catch (error) {
+      setErrorMessage(
+        error instanceof Error && error.message === "FORM_NOT_CONFIGURED"
+          ? "Форма пока не настроена. Пожалуйста, свяжитесь с нами по email."
+          : "Не удалось отправить заявку. Проверьте соединение и попробуйте ещё раз.",
+      );
+      setStatus("error");
+    } finally {
+      submitting.current = false;
+    }
+  }
+
   return (
     <div
       className="inquiry-backdrop"
@@ -488,7 +533,7 @@ function InquiryPanel({ product, onClose }: { product: CatalogProduct; onClose: 
         <button type="button" className="inquiry-close" onClick={onClose} aria-label="Закрыть">
           <X size={22} strokeWidth={1.3} />
         </button>
-        {sent ? (
+        {status === "sent" ? (
           <div className="inquiry-success">
             <span>
               <Check size={22} strokeWidth={1.4} />
@@ -507,30 +552,40 @@ function InquiryPanel({ product, onClose }: { product: CatalogProduct; onClose: 
             <p className="inquiry-product">
               {product.collection} · размер {product.size} · {formatPrice(product.price)}
             </p>
-            <form
-              onSubmit={(event) => {
-                event.preventDefault();
-                setSent(true);
-              }}
-            >
+            <form onSubmit={handleSubmit}>
+              <div className="absolute -left-[9999px] h-px w-px overflow-hidden" aria-hidden="true">
+                <label htmlFor={`website-${product.id}`}>Не заполняйте это поле</label>
+                <input
+                  id={`website-${product.id}`}
+                  name="website"
+                  tabIndex={-1}
+                  autoComplete="off"
+                />
+              </div>
               <label>
                 <span>Как к вам обращаться</span>
-                <input name="name" autoComplete="name" required />
+                <input name="name" autoComplete="name" maxLength={120} required />
               </label>
               <label>
                 <span>Телефон, Telegram или email</span>
-                <input name="contact" autoComplete="email" required />
+                <input name="contact" autoComplete="email" maxLength={200} required />
               </label>
               <label>
                 <span>Комментарий</span>
                 <textarea
                   name="comment"
                   rows={3}
+                  maxLength={1500}
                   defaultValue={`Интересует ${product.collection} ${product.color}, размер ${product.size}`}
                 />
               </label>
-              <button type="submit" className="inquiry-submit">
-                Отправить заявку
+              {status === "error" && (
+                <p role="alert" className="inquiry-error">
+                  {errorMessage}
+                </p>
+              )}
+              <button type="submit" className="inquiry-submit" disabled={status === "submitting"}>
+                {status === "submitting" ? "Отправляем…" : "Отправить заявку"}
                 <ArrowRight size={18} strokeWidth={1.4} />
               </button>
               <p className="inquiry-privacy">
