@@ -77,18 +77,17 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
     meta: [
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
-      { title: "Caché — кожаные футляры для хранения драгоценностей" },
+      { title: "Caché — кожаные футляры ручной работы" },
       {
         name: "description",
         content:
-          "Премиальные футляры ручной работы для бережного хранения и транспортировки украшений. Индивидуальные ложементы, кожа, замша. Коллекции Base, Extraordinary и Rare.",
+          "Кожаные футляры ручной работы, в которых каждое украшение обретает своё место. Бережное хранение и транспортировка драгоценностей.",
       },
       { name: "author", content: "Caché" },
-      { property: "og:title", content: "Caché — драгоценный дом для ваших украшений" },
+      { property: "og:title", content: "Caché — культура хранения ценного" },
       {
         property: "og:description",
-        content:
-          "Кожаные футляры ручной работы, в которых каждое украшение получает собственное защищённое место.",
+        content: "Кожаные футляры ручной работы, в которых каждое украшение обретает своё место.",
       },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
