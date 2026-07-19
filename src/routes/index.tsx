@@ -1,9 +1,10 @@
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, Link } from "@tanstack/react-router";
+import { ArrowRight } from "lucide-react";
 import { useState } from "react";
 import castleAsset from "@/assets/cache-castle.jpg";
-import collectionBaseAsset from "@/assets/cache-collection-base.jpg";
-import collectionExtraordinaryAsset from "@/assets/cache-collection-extraordinary-malachite.jpg";
-import collectionRareAsset from "@/assets/cache-collection-rare.jpg";
+import collectionBaseAsset from "@/assets/catalog/base-greige-1.jpg";
+import collectionExtraordinaryAsset from "@/assets/catalog/home-extraordinary-8275.jpg";
+import collectionRareAsset from "@/assets/catalog/rare-onyx-5.jpg";
 import founderAlexeyAsset from "@/assets/cache-founder-alexey.jpg";
 import founderDariaAsset from "@/assets/cache-founder-daria.jpg";
 import heroAsset from "@/assets/cache-hero-edited.png";
@@ -12,6 +13,7 @@ import insertSAsset from "@/assets/cache-insert-s.jpg";
 import materialsOstrichAsset from "@/assets/cache-materials-ostrich.jpg";
 import materialsPaletteAsset from "@/assets/cache-materials-palette.jpg";
 import testingAsset from "@/assets/cache-testing.jpg";
+import { useHideOnScroll } from "@/lib/use-hide-on-scroll";
 
 export const Route = createFileRoute("/")({
   head: () => ({
@@ -30,17 +32,19 @@ export const Route = createFileRoute("/")({
 const collectionCards = [
   {
     name: "Base",
+    filter: "Base" as const,
     caption: "Base S · Грейдж",
     image: collectionBaseAsset,
-    alt: "Футляр Caché Base в оттенке грейдж с ложементами на мраморных блоках",
+    alt: "Футляр Caché Base в оттенке грейдж с ложементами на каменных блоках",
     text: "Спокойная базовая линия с мягкой природной палитрой, чистой формой и акцентом на ежедневное бережное хранение.",
     details: ["Кожа козы и замша телёнка", "Размеры S и M", "Никель или золото"],
   },
   {
     name: "Extraordinary",
-    caption: "Extraordinary · Малахит",
+    filter: "Extraordinary" as const,
+    caption: "Extraordinary",
     image: collectionExtraordinaryAsset,
-    alt: "Зелёный футляр Caché Extraordinary в оттенке Малахит на каменной подставке",
+    alt: "Футляр Caché Extraordinary на тёмном скульптурном объекте",
     text: "Выразительные сезонные выпуски, где фактура кожи, замши, нитей и металла собирается в более редкое цветовое решение.",
     details: [
       "Кожа страуса и замша козы",
@@ -50,9 +54,10 @@ const collectionCards = [
   },
   {
     name: "Rare",
+    filter: "Rare" as const,
     caption: "Rare · Чёрный оникс",
     image: collectionRareAsset,
-    alt: "Чёрный футляр Caché Rare на белых подставках",
+    alt: "Чёрный футляр Caché Rare среди ветвей и зелени",
     text: "Индивидуальные изделия под конкретную коллекцию, украшение или сценарий хранения, включая нестандартную архитектуру ложементов.",
     details: ["Личная встреча и интервью", "Подбор кожи, замши и металла", "Ложементы под задачу"],
   },
@@ -113,6 +118,7 @@ function CachePage() {
 
 function Header() {
   const [open, setOpen] = useState(false);
+  const hidden = useHideOnScroll();
   const links = [
     { href: "#about", label: "О Caché" },
     { href: "#purpose", label: "Назначение" },
@@ -121,7 +127,9 @@ function Header() {
     { href: "#contact", label: "Знакомство с Caché" },
   ];
   return (
-    <header className="sticky top-0 z-40 backdrop-blur-md bg-[color-mix(in_oklab,var(--cream)_85%,transparent)] border-b border-border">
+    <header
+      className={`site-header sticky top-0 z-40 backdrop-blur-md bg-[color-mix(in_oklab,var(--cream)_85%,transparent)] border-b border-border ${hidden && !open ? "is-hidden" : ""}`}
+    >
       <div className="container-luxe flex items-center justify-between h-16 md:h-20">
         <a href="#top" className="flex flex-col leading-none">
           <span className="font-display text-3xl md:text-[34px] tracking-wide">Caché</span>
@@ -136,9 +144,9 @@ function Header() {
             </a>
           ))}
         </nav>
-        <a href="#contact" className="hidden lg:inline-flex btn-primary">
-          Запросить каталог
-        </a>
+        <Link to="/catalog" className="hidden lg:inline-flex btn-primary">
+          Каталог
+        </Link>
         <button className="lg:hidden p-2" onClick={() => setOpen((v) => !v)} aria-label="Меню">
           <div className="space-y-1.5">
             <span className="block w-6 h-px bg-ink" />
@@ -155,13 +163,13 @@ function Header() {
                 {l.label}
               </a>
             ))}
-            <a
-              href="#contact"
+            <Link
+              to="/catalog"
               onClick={() => setOpen(false)}
               className="btn-primary justify-center mt-2"
             >
-              Запросить каталог
-            </a>
+              Каталог
+            </Link>
           </div>
         </div>
       )}
@@ -196,9 +204,9 @@ function Hero() {
             способы хранения, которые подвергают риску драгоценности.
           </p>
           <div className="mt-10 flex flex-wrap gap-3">
-            <a href="#contact" className="btn-primary">
-              Запросить каталог
-            </a>
+            <Link to="/catalog" className="btn-primary">
+              Каталог
+            </Link>
             <a href="#collections" className="btn-ghost">
               Смотреть коллекции
             </a>
@@ -213,11 +221,22 @@ function Hero() {
               height={1536}
               className="w-full h-full object-cover"
             />
-            <div className="absolute bottom-0 left-0 right-0 p-6 md:p-8 bg-gradient-to-t from-black/60 to-transparent">
-              <p className="eyebrow text-cream/80">Extraordinary M · Малахит</p>
-              <p className="font-display text-cream text-2xl mt-1">
-                Каждое украшение на своём месте
-              </p>
+            <div className="absolute bottom-0 left-0 right-0 p-6 md:p-8 bg-gradient-to-t from-black/70 to-transparent flex items-end justify-between gap-5">
+              <div>
+                <p className="eyebrow text-cream/80">Extraordinary · Малахит</p>
+                <p className="font-display text-cream text-2xl mt-1">
+                  Каждое украшение на своём месте
+                </p>
+              </div>
+              <Link
+                to="/catalog/$productId"
+                params={{ productId: "extra-malachite-s" }}
+                search={{ collection: "Extraordinary" }}
+                className="flex shrink-0 items-center gap-2 border-b border-cream/70 pb-1 text-[10px] uppercase tracking-[0.15em] text-cream transition-colors hover:border-cream/40 hover:text-cream/75"
+              >
+                Рассмотреть
+                <ArrowRight size={15} strokeWidth={1.4} />
+              </Link>
             </div>
           </div>
         </div>
@@ -417,31 +436,46 @@ function Collections() {
         <div className="grid lg:grid-cols-3 gap-6">
           {collectionCards.map((card) => (
             <article key={card.name} className="border border-border bg-background">
-              <div className="aspect-[4/3] overflow-hidden bg-greige">
-                <img
-                  src={card.image}
-                  alt={card.alt}
-                  width={1587}
-                  height={1059}
-                  loading="lazy"
-                  className="w-full h-full object-cover"
-                />
-              </div>
-              <div className="p-6 md:p-7">
-                <p className="eyebrow mb-3">{card.caption}</p>
-                <h3 className="font-display text-3xl mb-4">{card.name}</h3>
-                <p className="text-[15px] text-muted-foreground leading-relaxed mb-6">
-                  {card.text}
-                </p>
-                <ul className="space-y-3 text-[14px] text-ink/85">
-                  {card.details.map((detail) => (
-                    <li key={detail} className="flex gap-3 border-t border-border pt-3">
-                      <span className="font-display text-cognac">—</span>
-                      <span>{detail}</span>
-                    </li>
-                  ))}
-                </ul>
-              </div>
+              <Link
+                to="/catalog"
+                search={{ collection: card.filter }}
+                className="group block h-full"
+                aria-label={`Открыть коллекцию ${card.name} в каталоге`}
+              >
+                <div className="aspect-[4/3] overflow-hidden bg-greige">
+                  <img
+                    src={card.image}
+                    alt={card.alt}
+                    width={1587}
+                    height={1059}
+                    loading="lazy"
+                    className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-[1.025]"
+                  />
+                </div>
+                <div className="p-6 md:p-7">
+                  <p className="eyebrow mb-3">{card.caption}</p>
+                  <h3 className="font-display text-3xl mb-4">{card.name}</h3>
+                  <p className="text-[15px] text-muted-foreground leading-relaxed mb-6">
+                    {card.text}
+                  </p>
+                  <ul className="space-y-3 text-[14px] text-ink/85">
+                    {card.details.map((detail) => (
+                      <li key={detail} className="flex gap-3 border-t border-border pt-3">
+                        <span className="font-display text-cognac">—</span>
+                        <span>{detail}</span>
+                      </li>
+                    ))}
+                  </ul>
+                  <span className="mt-7 flex items-center justify-between border-t border-border pt-4 text-[10px] uppercase tracking-[0.15em]">
+                    Смотреть в каталоге
+                    <ArrowRight
+                      size={16}
+                      strokeWidth={1.4}
+                      className="transition-transform group-hover:translate-x-1"
+                    />
+                  </span>
+                </div>
+              </Link>
             </article>
           ))}
         </div>
