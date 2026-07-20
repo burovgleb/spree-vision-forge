@@ -36,6 +36,7 @@ jobs:
       - name: Build
         env:
           GITHUB_PAGES: "true"
+          GITHUB_PAGES_CUSTOM_DOMAIN: "true"
           VITE_GOOGLE_SCRIPT_URL: ${{ vars.VITE_GOOGLE_SCRIPT_URL }}
         run: bun run build:pages
 

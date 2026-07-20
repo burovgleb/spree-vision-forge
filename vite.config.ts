@@ -7,8 +7,9 @@
 import { defineConfig } from "@lovable.dev/vite-tanstack-config";
 
 const githubRepository = process.env.GITHUB_REPOSITORY;
+const hasGitHubPagesCustomDomain = process.env.GITHUB_PAGES_CUSTOM_DOMAIN === "true";
 const githubPagesBase =
-  process.env.GITHUB_PAGES === "true"
+  process.env.GITHUB_PAGES === "true" && !hasGitHubPagesCustomDomain
     ? `/${githubRepository?.split("/")[1] ?? "spree-vision-forge"}/`
     : "/";
 
