@@ -1,6 +1,6 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { ArrowRight } from "lucide-react";
-import { useRef, useState, type FormEvent } from "react";
+import { ArrowRight, ChevronLeft, ChevronRight, Maximize2, Minus, Plus, X } from "lucide-react";
+import { useEffect, useRef, useState, type FormEvent } from "react";
 import castleAsset from "@/assets/cache-castle.jpg";
 import collectionBaseAsset from "@/assets/catalog/base-greige-1.jpg";
 import collectionExtraordinaryAsset from "@/assets/catalog/home-extraordinary-8275.jpg";
@@ -98,6 +98,23 @@ const construction = [
     n: "06",
     title: "Расстояние между зонами",
     text: "Эргономика большинства ложементов исключает соприкосновение украшений друг с другом.",
+  },
+];
+
+const insertCards = [
+  {
+    label: "S",
+    image: insertSAsset,
+    alt: "Схема назначения ложементов Caché размера S",
+    description:
+      "Миниатюрный футляр в размере S подходит для набора из 3–4 колец классического размера или 1–2 колец побольше. Он также идеально подходит для коллекции пусет. А чехольчики могут использоваться для кулонов или брошей.",
+  },
+  {
+    label: "M",
+    image: insertMAsset,
+    alt: "Схема назначения ложементов Caché размера M",
+    description:
+      "Футляр M идеально подходит для сетов из кольца и серёг. А также для уверенной коллекции из 9–12 классических колец или хранения двух крупных украшений: колец или брошей.",
   },
 ];
 
@@ -285,102 +302,229 @@ function Problem() {
 /* ───────────────────────── How it works ───────────────────────── */
 
 function HowItWorks() {
-  return (
-    <section className="bg-background">
-      <div className="container-luxe py-20 md:py-32">
-        <div className="grid md:grid-cols-12 gap-10 mb-16">
-          <div className="md:col-span-7">
-            <p className="eyebrow mb-5">Шесть лет тестирования</p>
-            <h2 className="font-display text-4xl md:text-6xl leading-[1.02] tracking-normal">
-              Мы снова и снова меняли переменные в поисках идеальной формулы хранения
-            </h2>
-          </div>
-          <p className="md:col-span-5 md:pt-3 text-[16px] leading-relaxed text-muted-foreground">
-            Мы шесть лет тестировали эргономику Caché: расстояние между элементами, форму
-            ложементов, материалы для внутренней отделки и сценарии использования. Результат:
-            футляр, который воплощает роскошные условия хранения и перевозки ценностей.
-          </p>
-        </div>
+  const [activeInsert, setActiveInsert] = useState<number | null>(null);
+  const [insertZoom, setInsertZoom] = useState(1);
 
-        <div className="grid lg:grid-cols-12 gap-10 items-start">
-          <div className="lg:col-span-6 lg:sticky lg:top-24">
-            <div className="aspect-[3/2] overflow-hidden bg-greige">
+  useEffect(() => {
+    if (activeInsert === null) return;
+
+    const previousOverflow = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+
+    const onKeyDown = (event: KeyboardEvent) => {
+      if (event.key === "Escape") setActiveInsert(null);
+      if (event.key === "ArrowLeft" || event.key === "ArrowRight") {
+        const direction = event.key === "ArrowLeft" ? -1 : 1;
+        setActiveInsert((current) =>
+          current === null ? null : (current + direction + insertCards.length) % insertCards.length,
+        );
+        setInsertZoom(1);
+      }
+    };
+
+    window.addEventListener("keydown", onKeyDown);
+    return () => {
+      document.body.style.overflow = previousOverflow;
+      window.removeEventListener("keydown", onKeyDown);
+    };
+  }, [activeInsert]);
+
+  const openInsert = (index: number) => {
+    setActiveInsert(index);
+    setInsertZoom(1);
+  };
+
+  const moveInsert = (direction: -1 | 1) => {
+    setActiveInsert((current) =>
+      current === null ? null : (current + direction + insertCards.length) % insertCards.length,
+    );
+    setInsertZoom(1);
+  };
+
+  return (
+    <>
+      <section className="bg-background">
+        <div className="container-luxe py-20 md:py-32">
+          <div className="grid md:grid-cols-12 gap-10 mb-16">
+            <div className="md:col-span-7">
+              <p className="eyebrow mb-5">Шесть лет тестирования</p>
+              <h2 className="font-display text-4xl md:text-6xl leading-[1.02] tracking-normal">
+                Мы снова и снова меняли переменные в поисках идеальной формулы хранения
+              </h2>
+            </div>
+            <p className="md:col-span-5 md:pt-3 text-[16px] leading-relaxed text-muted-foreground">
+              Мы шесть лет тестировали эргономику Caché: расстояние между элементами, форму
+              ложементов, материалы для внутренней отделки и сценарии использования. Результат:
+              футляр, который воплощает роскошные условия хранения и перевозки ценностей.
+            </p>
+          </div>
+
+          <div className="grid lg:grid-cols-12 gap-10 items-start">
+            <div className="lg:col-span-6 lg:sticky lg:top-24">
+              <div className="aspect-[3/2] overflow-hidden bg-greige">
+                <img
+                  src={testingAsset}
+                  alt="Тестирование ложемента Caché для серёг в кожаном футляре"
+                  width={1800}
+                  height={1200}
+                  loading="lazy"
+                  className="w-full h-full object-cover"
+                />
+              </div>
+              <p className="mt-4 text-sm text-muted-foreground">
+                Шесть лет тестирования формы, фиксации и сценариев использования.
+              </p>
+            </div>
+            <ol className="lg:col-span-6 divide-y divide-border border-y border-border">
+              {construction.map((c) => (
+                <li key={c.n} className="grid grid-cols-12 gap-4 py-7">
+                  <div className="col-span-2 font-display text-2xl text-cognac">{c.n}</div>
+                  <div className="col-span-10">
+                    <h3 className="font-display text-2xl leading-tight mb-2">{c.title}</h3>
+                    <p className="text-[15px] leading-relaxed text-muted-foreground">{c.text}</p>
+                  </div>
+                </li>
+              ))}
+            </ol>
+          </div>
+
+          <div className="mt-20 md:mt-28 border-t border-border pt-14">
+            <div className="grid md:grid-cols-12 gap-10 mb-10">
+              <div className="md:col-span-5">
+                <p className="eyebrow mb-4">Ложементы</p>
+                <h3 className="font-display text-3xl md:text-4xl leading-tight">
+                  Когда форма определяет содержание
+                </h3>
+              </div>
+              <p className="md:col-span-7 text-[16px] leading-relaxed text-muted-foreground">
+                Каждый футляр независимо от размеров сопровождается набором сменных ложементов.
+              </p>
+            </div>
+            <div className="grid md:grid-cols-2 gap-5">
+              {insertCards.map((item, index) => (
+                <figure key={item.label} className="border border-border bg-background">
+                  <button
+                    type="button"
+                    className="group relative block w-full cursor-zoom-in overflow-hidden bg-greige focus-visible:outline focus-visible:outline-1 focus-visible:outline-offset-2 focus-visible:outline-ink"
+                    aria-label={`Открыть схему ложементов размера ${item.label} на весь экран`}
+                    onClick={() => openInsert(index)}
+                  >
+                    <img
+                      src={item.image}
+                      alt={item.alt}
+                      width={1800}
+                      height={1012}
+                      loading="lazy"
+                      className="w-full aspect-[16/9] object-cover transition-transform duration-500 group-hover:scale-[1.015]"
+                    />
+                    <span className="absolute bottom-4 right-4 inline-flex items-center gap-2 bg-background/95 px-3 py-2 text-[10px] uppercase tracking-[0.16em] text-ink shadow-sm">
+                      <Maximize2 size={14} strokeWidth={1.4} />
+                      На весь экран
+                    </span>
+                  </button>
+                  <figcaption className="px-5 py-5 text-sm leading-relaxed text-muted-foreground">
+                    <span className="mb-2 block font-display text-2xl text-ink">
+                      Размер {item.label}
+                    </span>
+                    {item.description}
+                  </figcaption>
+                </figure>
+              ))}
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {activeInsert !== null && (
+        <div
+          className="fixed inset-0 z-[100] flex flex-col bg-noir text-cream"
+          role="dialog"
+          aria-modal="true"
+          aria-label={`Схема ложементов размера ${insertCards[activeInsert].label}`}
+        >
+          <div className="relative z-10 flex h-16 shrink-0 items-center justify-between border-b border-cream/15 px-4 md:px-7">
+            <button
+              type="button"
+              className="inline-flex items-center gap-2 text-[11px] uppercase tracking-[0.16em] text-cream/80 transition-colors hover:text-cream"
+              onClick={() => setActiveInsert(null)}
+              autoFocus
+            >
+              <X size={18} strokeWidth={1.4} />
+              <span className="hidden sm:inline">Закрыть</span>
+            </button>
+            <p className="absolute left-1/2 -translate-x-1/2 whitespace-nowrap font-display text-xl text-cream md:text-2xl">
+              Размер {insertCards[activeInsert].label}
+              <span className="ml-3 font-sans text-[10px] tracking-[0.16em] text-cream/50">
+                {activeInsert + 1} / {insertCards.length}
+              </span>
+            </p>
+            <div className="flex items-center gap-1">
+              <button
+                type="button"
+                className="grid size-9 place-items-center text-cream/70 transition-colors hover:text-cream disabled:opacity-30"
+                aria-label="Уменьшить"
+                onClick={() => setInsertZoom((current) => Math.max(1, current - 0.5))}
+                disabled={insertZoom === 1}
+              >
+                <Minus size={17} strokeWidth={1.4} />
+              </button>
+              <span className="w-11 text-center text-[10px] tracking-[0.12em] text-cream/60">
+                {Math.round(insertZoom * 100)}%
+              </span>
+              <button
+                type="button"
+                className="grid size-9 place-items-center text-cream/70 transition-colors hover:text-cream disabled:opacity-30"
+                aria-label="Увеличить"
+                onClick={() => setInsertZoom((current) => Math.min(3, current + 0.5))}
+                disabled={insertZoom === 3}
+              >
+                <Plus size={17} strokeWidth={1.4} />
+              </button>
+            </div>
+          </div>
+
+          <div className="relative min-h-0 flex-1 overflow-auto overscroll-contain">
+            <div
+              className={
+                insertZoom === 1
+                  ? "flex min-h-full min-w-full items-center justify-center p-4 sm:p-10 md:p-16"
+                  : "flex min-h-full w-max min-w-full items-center justify-start p-4 sm:p-10 md:p-16"
+              }
+            >
               <img
-                src={testingAsset}
-                alt="Тестирование ложемента Caché для серёг в кожаном футляре"
+                src={insertCards[activeInsert].image}
+                alt={insertCards[activeInsert].alt}
                 width={1800}
-                height={1200}
-                loading="lazy"
-                className="w-full h-full object-cover"
+                height={1012}
+                className={
+                  insertZoom === 1
+                    ? "max-h-[calc(100vh-8rem)] max-w-full object-contain"
+                    : "max-h-none max-w-none object-contain"
+                }
+                style={insertZoom === 1 ? undefined : { width: `${insertZoom * 100}vw` }}
               />
             </div>
-            <p className="mt-4 text-sm text-muted-foreground">
-              Шесть лет тестирования формы, фиксации и сценариев использования.
-            </p>
-          </div>
-          <ol className="lg:col-span-6 divide-y divide-border border-y border-border">
-            {construction.map((c) => (
-              <li key={c.n} className="grid grid-cols-12 gap-4 py-7">
-                <div className="col-span-2 font-display text-2xl text-cognac">{c.n}</div>
-                <div className="col-span-10">
-                  <h3 className="font-display text-2xl leading-tight mb-2">{c.title}</h3>
-                  <p className="text-[15px] leading-relaxed text-muted-foreground">{c.text}</p>
-                </div>
-              </li>
-            ))}
-          </ol>
-        </div>
 
-        <div className="mt-20 md:mt-28 border-t border-border pt-14">
-          <div className="grid md:grid-cols-12 gap-10 mb-10">
-            <div className="md:col-span-5">
-              <p className="eyebrow mb-4">Ложементы</p>
-              <h3 className="font-display text-3xl md:text-4xl leading-tight">
-                Когда форма определяет содержание
-              </h3>
-            </div>
-            <p className="md:col-span-7 text-[16px] leading-relaxed text-muted-foreground">
-              Каждый футляр независимо от размеров сопровождается набором сменных ложементов.
-            </p>
-          </div>
-          <div className="grid md:grid-cols-2 gap-5">
-            {[
-              {
-                label: "S",
-                image: insertSAsset,
-                alt: "Схема назначения ложементов Caché размера S",
-                description:
-                  "Миниатюрный футляр в размере S подходит для набора из 3–4 колец классического размера или 1–2 колец побольше. Он также идеально подходит для коллекции пусет. А чехольчики могут использоваться для кулонов или брошей.",
-              },
-              {
-                label: "M",
-                image: insertMAsset,
-                alt: "Схема назначения ложементов Caché размера M",
-                description:
-                  "Футляр M идеально подходит для сетов из кольца и серёг. А также для уверенной коллекции из 9–12 классических колец или хранения двух крупных украшений: колец или брошей.",
-              },
-            ].map((item) => (
-              <figure key={item.label} className="border border-border bg-background">
-                <img
-                  src={item.image}
-                  alt={item.alt}
-                  width={1800}
-                  height={1012}
-                  loading="lazy"
-                  className="w-full aspect-[16/9] object-cover"
-                />
-                <figcaption className="px-5 py-5 text-sm leading-relaxed text-muted-foreground">
-                  <span className="mb-2 block font-display text-2xl text-ink">
-                    Размер {item.label}
-                  </span>
-                  {item.description}
-                </figcaption>
-              </figure>
-            ))}
+            <button
+              type="button"
+              className="fixed left-3 top-1/2 z-10 grid size-11 -translate-y-1/2 place-items-center bg-background/95 text-ink shadow-md transition-colors hover:bg-background md:left-6"
+              aria-label="Предыдущая схема"
+              onClick={() => moveInsert(-1)}
+            >
+              <ChevronLeft size={21} strokeWidth={1.3} />
+            </button>
+            <button
+              type="button"
+              className="fixed right-3 top-1/2 z-10 grid size-11 -translate-y-1/2 place-items-center bg-background/95 text-ink shadow-md transition-colors hover:bg-background md:right-6"
+              aria-label="Следующая схема"
+              onClick={() => moveInsert(1)}
+            >
+              <ChevronRight size={21} strokeWidth={1.3} />
+            </button>
           </div>
         </div>
-      </div>
-    </section>
+      )}
+    </>
   );
 }
 
@@ -727,26 +871,6 @@ function CTA() {
             Запросите каталог, обсудите создание индивидуального футляра или запишитесь на личный
             показ.
           </p>
-          <div className="space-y-4 text-[15px]">
-            <a
-              href="https://wa.me/"
-              className="flex items-center gap-3 hover:text-cognac transition-colors"
-            >
-              <span className="font-display text-cognac">→</span> WhatsApp
-            </a>
-            <a
-              href="https://t.me/"
-              className="flex items-center gap-3 hover:text-cognac transition-colors"
-            >
-              <span className="font-display text-cognac">→</span> Telegram
-            </a>
-            <a
-              href="mailto:hello@cache-maison.com"
-              className="flex items-center gap-3 hover:text-cognac transition-colors"
-            >
-              <span className="font-display text-cognac">→</span> hello@cache-maison.com
-            </a>
-          </div>
         </div>
         <form
           className="md:col-span-7 bg-greige/40 p-8 md:p-12 border border-border space-y-6"
@@ -871,8 +995,7 @@ function Footer() {
         <div className="md:col-span-5">
           <p className="font-display text-3xl text-cream">Caché</p>
           <p className="mt-4 text-sm max-w-sm">
-            Драгоценные коробочки для ваших сокровищ. Ручная работа, кожа, замша, индивидуальные
-            ложементы.
+            Кожаные футляры ручной работы, в которых каждое украшение обретает своё место.
           </p>
         </div>
         <div className="md:col-span-3">
