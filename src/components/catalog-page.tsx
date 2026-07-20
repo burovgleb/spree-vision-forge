@@ -64,7 +64,7 @@ export function CatalogPage({
           <div className="catalog-intro">
             <div>
               <p className="catalog-kicker">Каталог 2026</p>
-              <h1>Коллекция Caché</h1>
+              <h1>Коллекции Caché</h1>
             </div>
             <p>
               Футляры, в которых каждое украшение получает своё защищённое место. Выберите модель,
@@ -638,7 +638,6 @@ function CatalogFooter() {
         <p>Культура хранения ценного</p>
       </div>
       <div>
-        <a href="mailto:hello@cache-maison.com">hello@cache-maison.com</a>
         <span>Москва · Личная встреча по записи</span>
       </div>
       <div className="catalog-footer-bottom">

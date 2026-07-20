@@ -34,6 +34,15 @@ const baseChocolate = gallery(
   "base-chocolate-2.jpg",
   "base-chocolate-3.jpg",
 );
+const baseCaramelS = gallery("base-caramel-s-1.jpg");
+const baseCaramelM = gallery(
+  "base-caramel-m-1.jpg",
+  "base-caramel-m-2.jpg",
+  "base-caramel-m-3.jpg",
+  "base-caramel-m-4.jpg",
+  "base-caramel-m-5.jpg",
+  "base-caramel-m-6.jpg",
+);
 const denimS = gallery("extra-denim-1.jpg", "extra-denim-2.jpg", "extra-denim-s-detail.jpg");
 const denimM = gallery("extra-denim-m.jpg", "extra-denim-3.jpg", "extra-denim-m-2.jpg");
 const taupe = gallery("extra-taupe-1.jpg", "extra-taupe-2.jpg", "extra-taupe-3.jpg");
@@ -63,6 +72,17 @@ const sapphireM = gallery(
   "extra-sapphire-3.jpg",
   "extra-sapphire-m-2.jpg",
 );
+const lizard = gallery(
+  "extra-lizard-1.jpg",
+  "extra-lizard-2.jpg",
+  "extra-lizard-3.jpg",
+  "extra-lizard-4.jpg",
+  "extra-lizard-5.jpg",
+  "extra-lizard-6.jpg",
+  "extra-lizard-7.jpg",
+  "extra-lizard-8.jpg",
+);
+const butter = gallery("extra-butter-1.jpg", "extra-butter-2.jpg", "extra-butter-3.jpg");
 const onyx = gallery(
   "rare-onyx-4.jpg",
   "rare-onyx-1.jpg",
@@ -137,6 +157,30 @@ export const catalogProducts: CatalogProduct[] = [
     images: baseChocolate,
     tone: "#49342d",
     presentation: true,
+  },
+  {
+    id: "base-caramel-s",
+    collection: "Base",
+    color: "Карамель",
+    size: "S",
+    materials: "Кожа козы, замша козы",
+    metal: "Золото",
+    price: 265000,
+    cardImage: image("base-caramel-s-1.jpg"),
+    images: baseCaramelS,
+    tone: "#a6532d",
+  },
+  {
+    id: "base-caramel-m",
+    collection: "Base",
+    color: "Карамель",
+    size: "M",
+    materials: "Кожа козы, замша козы",
+    metal: "Золото",
+    price: 350000,
+    cardImage: image("base-caramel-m-1.jpg"),
+    images: baseCaramelM,
+    tone: "#a6532d",
   },
   {
     id: "extra-denim-s",
@@ -295,6 +339,30 @@ export const catalogProducts: CatalogProduct[] = [
     cardImage: image("extra-sapphire-m-1.jpg"),
     images: sapphireM,
     tone: "#273653",
+  },
+  {
+    id: "extra-lizard-s",
+    collection: "Extraordinary",
+    color: "?",
+    size: "S",
+    materials: "Кожа ящерицы, кожа козы, замша козы",
+    metal: "Никель",
+    price: 360000,
+    cardImage: image("extra-lizard-1.jpg"),
+    images: lizard,
+    tone: "#7b666b",
+  },
+  {
+    id: "extra-butter-s",
+    collection: "Extraordinary",
+    color: "Сливочное масло",
+    size: "S",
+    materials: "Кожа козы, замша козы",
+    metal: "Золото",
+    price: 285000,
+    cardImage: image("extra-butter-1.jpg"),
+    images: butter,
+    tone: "#e0be68",
   },
   {
     id: "rare-onyx-s",
