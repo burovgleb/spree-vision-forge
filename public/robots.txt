@@ -1,0 +1,5 @@
+User-agent: *
+Allow: /
+
+Host: cache-atelier.ru
+Sitemap: https://cache-atelier.ru/sitemap.xml

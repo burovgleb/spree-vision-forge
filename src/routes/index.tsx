@@ -7,7 +7,7 @@ import collectionExtraordinaryAsset from "@/assets/catalog/home-extraordinary-82
 import collectionRareAsset from "@/assets/catalog/rare-onyx-5.jpg";
 import founderAlexeyAsset from "@/assets/cache-founder-alexey.jpg";
 import founderDariaAsset from "@/assets/cache-founder-daria.jpg";
-import heroAsset from "@/assets/cache-hero-edited.png";
+import heroAsset from "@/assets/cache-hero-edited.jpg";
 import insertMAsset from "@/assets/cache-insert-m.jpg";
 import insertSAsset from "@/assets/cache-insert-s.jpg";
 import materialsOstrichAsset from "@/assets/cache-materials-ostrich.jpg";
@@ -15,17 +15,39 @@ import materialsPaletteAsset from "@/assets/cache-materials-palette.jpg";
 import testingAsset from "@/assets/cache-testing.jpg";
 import { useHideOnScroll } from "@/lib/use-hide-on-scroll";
 import { submitFeedback } from "@/lib/feedback";
+import { absoluteUrl, SITE_DESCRIPTION, SITE_ORIGIN } from "@/lib/seo";
 
 export const Route = createFileRoute("/")({
   head: () => ({
     meta: [
-      { title: "Caché — кожаные футляры ручной работы" },
+      { title: "Caché — кожаные футляры для украшений ручной работы" },
       {
         name: "description",
-        content:
-          "Кожаные футляры ручной работы, в которых каждое украшение обретает своё место. Бережное хранение и транспортировка драгоценностей.",
+        content: SITE_DESCRIPTION,
+      },
+      { property: "og:title", content: "Caché — культура хранения ценного" },
+      { property: "og:description", content: SITE_DESCRIPTION },
+      { property: "og:url", content: SITE_ORIGIN },
+      { property: "og:image", content: absoluteUrl(heroAsset) },
+      { name: "twitter:title", content: "Caché — культура хранения ценного" },
+      { name: "twitter:description", content: SITE_DESCRIPTION },
+      { name: "twitter:image", content: absoluteUrl(heroAsset) },
+      {
+        "script:ld+json": {
+          "@context": "https://schema.org",
+          "@type": "WebPage",
+          "@id": `${SITE_ORIGIN}/#webpage`,
+          url: SITE_ORIGIN,
+          name: "Caché — кожаные футляры для украшений ручной работы",
+          description: SITE_DESCRIPTION,
+          inLanguage: "ru-RU",
+          isPartOf: { "@id": `${SITE_ORIGIN}/#website` },
+          about: { "@id": `${SITE_ORIGIN}/#organization` },
+          primaryImageOfPage: absoluteUrl(heroAsset),
+        },
       },
     ],
+    links: [{ rel: "canonical", href: SITE_ORIGIN }],
   }),
   component: CachePage,
 });
@@ -153,7 +175,7 @@ function Header() {
       className={`site-header sticky top-0 z-40 backdrop-blur-md bg-[color-mix(in_oklab,var(--cream)_85%,transparent)] border-b border-border ${hidden && !open ? "is-hidden" : ""}`}
     >
       <div className="container-luxe flex items-center justify-between h-16 md:h-20">
-        <a href="#top" className="flex flex-col leading-none">
+        <a href="#top" className="flex flex-col leading-none" aria-label="Caché — на главную">
           <span className="font-display text-3xl md:text-[34px] tracking-wide">Caché</span>
           <span className="hidden sm:block mt-1 text-[10px] uppercase tracking-[0.18em] text-muted-foreground">
             Культура хранения ценного
@@ -169,7 +191,14 @@ function Header() {
         <Link to="/catalog" className="hidden lg:inline-flex btn-primary">
           Каталог
         </Link>
-        <button className="lg:hidden p-2" onClick={() => setOpen((v) => !v)} aria-label="Меню">
+        <button
+          type="button"
+          className="lg:hidden p-2"
+          onClick={() => setOpen((v) => !v)}
+          aria-label={open ? "Закрыть меню" : "Открыть меню"}
+          aria-expanded={open}
+          aria-controls="mobile-navigation"
+        >
           <div className="space-y-1.5">
             <span className="block w-6 h-px bg-ink" />
             <span className="block w-6 h-px bg-ink" />
@@ -178,7 +207,7 @@ function Header() {
         </button>
       </div>
       {open && (
-        <div className="lg:hidden border-t border-border bg-cream">
+        <div id="mobile-navigation" className="lg:hidden border-t border-border bg-cream">
           <div className="container-luxe py-6 flex flex-col gap-4">
             {links.map((l) => (
               <a key={l.href} href={l.href} onClick={() => setOpen(false)} className="text-base">
@@ -220,7 +249,7 @@ function Hero() {
           <p className="mt-8 max-w-md text-[17px] leading-relaxed text-muted-foreground">
             Caché — кожаные футляры ручной работы, в которых каждое украшение обретает своё место.
           </p>
-          <p className="mt-5 max-w-md text-[15px] leading-relaxed text-ink/80">
+          <p className="mt-5 hidden max-w-md text-[15px] leading-relaxed text-ink/80 md:block">
             Незаменимый атрибут насыщенной светской жизни, который позволит забыть о беспокойстве за
             драгоценности. Уникальная эргономика, исключающая привычные способы хранения, которые
             подвергают риску ваши ценности.
@@ -235,12 +264,13 @@ function Hero() {
           </div>
         </div>
         <div className="lg:col-span-6 xl:col-span-7">
-          <div className="relative aspect-[4/5] lg:aspect-[5/6] overflow-hidden bg-noir">
+          <div className="mobile-full-bleed relative aspect-[4/5] overflow-hidden bg-noir lg:aspect-[5/6]">
             <img
               src={heroAsset}
               alt="Открытый зелёный футляр Caché с украшениями на натуральном камне"
               width={1024}
               height={1536}
+              fetchPriority="high"
               className="w-full h-full object-cover"
             />
             <div className="absolute bottom-0 left-0 right-0 p-6 md:p-8 bg-gradient-to-t from-black/70 to-transparent flex items-end justify-between gap-5">
@@ -361,7 +391,7 @@ function HowItWorks() {
 
           <div className="grid lg:grid-cols-12 gap-10 items-start">
             <div className="lg:col-span-6 lg:sticky lg:top-24">
-              <div className="aspect-[3/2] overflow-hidden bg-greige">
+              <div className="mobile-full-bleed aspect-[3/2] overflow-hidden bg-greige">
                 <img
                   src={testingAsset}
                   alt="Тестирование ложемента Caché для серёг в кожаном футляре"
@@ -533,9 +563,9 @@ function HowItWorks() {
 function Home() {
   return (
     <section id="about" className="bg-noir text-cream">
-      <div className="container-luxe py-24 md:py-36 grid md:grid-cols-12 gap-12 items-center">
+      <div className="container-luxe pt-24 pb-0 md:py-36 grid md:grid-cols-12 gap-12 items-center">
         <div className="md:col-span-6 order-2 md:order-1">
-          <div className="aspect-[4/5] overflow-hidden">
+          <div className="mobile-full-bleed aspect-[4/5] overflow-hidden">
             <img
               src={collectionBaseAsset}
               alt="Футляр Caché с ложементами на каменных подставках"
@@ -1002,19 +1032,23 @@ function Footer() {
           <p className="eyebrow text-cream/50 mb-4">Каталог</p>
           <ul className="space-y-2 text-sm">
             <li>
-              <a href="#collections" className="hover:text-cream">
+              <Link to="/catalog" search={{ collection: "Base" }} className="hover:text-cream">
                 Base
-              </a>
+              </Link>
             </li>
             <li>
-              <a href="#collections" className="hover:text-cream">
+              <Link
+                to="/catalog"
+                search={{ collection: "Extraordinary" }}
+                className="hover:text-cream"
+              >
                 Extraordinary
-              </a>
+              </Link>
             </li>
             <li>
-              <a href="#collections" className="hover:text-cream">
+              <Link to="/catalog" search={{ collection: "Rare" }} className="hover:text-cream">
                 Rare
-              </a>
+              </Link>
             </li>
           </ul>
         </div>
