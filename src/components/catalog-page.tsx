@@ -144,6 +144,7 @@ function CatalogFilters({
             key={filter}
             className={collection === filter ? "is-active" : ""}
             onClick={() => onCollection(filter)}
+            aria-pressed={collection === filter}
           >
             {filter}
           </button>
@@ -157,6 +158,7 @@ function CatalogFilters({
             key={filter}
             className={size === filter ? "is-active" : ""}
             onClick={() => onSize(filter)}
+            aria-pressed={size === filter}
           >
             {filter}
           </button>
@@ -191,7 +193,8 @@ function ProductCard({
             alt={`Футляр Caché ${product.collection}, ${product.color}, размер ${product.size}`}
             width={2000}
             height={1333}
-            loading="lazy"
+            loading={featured ? "eager" : "lazy"}
+            fetchPriority={featured ? "high" : "auto"}
           />
           <span className="catalog-card-zoom">
             <Maximize2 size={15} strokeWidth={1.4} />

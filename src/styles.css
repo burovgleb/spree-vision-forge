@@ -133,6 +133,14 @@
     }
   }
 
+  @media (max-width: 767px) {
+    .mobile-full-bleed {
+      width: 100vw;
+      max-width: none;
+      margin-inline: calc(50% - 50vw);
+    }
+  }
+
   .btn-primary {
     display: inline-flex;
     align-items: center;
@@ -196,6 +204,10 @@
 .catalog-page button,
 .catalog-page a {
   -webkit-tap-highlight-color: transparent;
+}
+
+.catalog-page button:not(:disabled):not(.product-slide) {
+  cursor: pointer;
 }
 
 .catalog-page button:focus-visible,
@@ -415,7 +427,10 @@
   color: color-mix(in srgb, var(--ink) 48%, transparent);
   font-size: 11px;
   letter-spacing: 0.08em;
-  transition: color 180ms ease;
+  transition:
+    border-color 180ms ease,
+    background-color 180ms ease,
+    color 180ms ease;
 }
 
 .catalog-filter-row button.is-active,
@@ -804,6 +819,14 @@
   background: rgba(247, 244, 237, 0.9);
   box-shadow: 0 5px 20px rgba(18, 16, 14, 0.12);
   backdrop-filter: blur(10px);
+  transition:
+    border-color 180ms ease,
+    background-color 180ms ease,
+    color 180ms ease;
+}
+
+.product-gallery-controls > button svg {
+  transition: transform 180ms ease;
 }
 
 .product-gallery-controls > div {
@@ -963,6 +986,14 @@
   font-size: 10px;
   letter-spacing: 0.13em;
   text-transform: uppercase;
+  transition:
+    background-color 220ms ease,
+    color 220ms ease;
+}
+
+.product-purchase > button svg,
+.inquiry-submit svg {
+  transition: transform 220ms ease;
 }
 
 /* Detail zoom */
@@ -1020,6 +1051,11 @@
   width: 38px;
   height: 38px;
   place-items: center;
+  border-radius: 50%;
+  transition:
+    background-color 180ms ease,
+    color 180ms ease,
+    opacity 180ms ease;
 }
 
 .zoom-toolbar button:disabled {
@@ -1058,6 +1094,9 @@
   place-items: center;
   transform: translateY(-50%);
   background: rgba(0, 0, 0, 0.28);
+  transition:
+    background-color 180ms ease,
+    color 180ms ease;
 }
 
 .zoom-prev {
@@ -1065,6 +1104,66 @@
 }
 .zoom-next {
   right: 0;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .catalog-filter-row button:not(.is-active):hover {
+    color: var(--ink);
+  }
+
+  .catalog-filter-row button:not(.is-active):hover::after {
+    position: absolute;
+    right: 0;
+    bottom: -6px;
+    left: 0;
+    height: 1px;
+    background: color-mix(in srgb, var(--ink) 46%, transparent);
+    content: "";
+  }
+
+  .catalog-size-filter button:not(.is-active):hover {
+    border-color: var(--ink);
+    background: color-mix(in srgb, var(--ink) 7%, transparent);
+    color: var(--ink);
+  }
+
+  .product-gallery-controls > button:hover {
+    border-color: var(--ink);
+    background: var(--ink);
+    color: #f5f1e9;
+  }
+
+  .product-gallery-controls > button:first-child:hover svg {
+    transform: translateX(-2px);
+  }
+
+  .product-gallery-controls > button:last-child:hover svg {
+    transform: translateX(2px);
+  }
+
+  .product-purchase > button:hover {
+    background: var(--cognac);
+  }
+
+  .inquiry-submit:not(:disabled):hover {
+    background: var(--cognac);
+  }
+
+  .product-purchase > button:hover svg,
+  .inquiry-submit:not(:disabled):hover svg {
+    transform: translateX(4px);
+  }
+
+  .zoom-toolbar button:not(:disabled):hover {
+    background: rgba(245, 241, 233, 0.16);
+    color: #fff;
+  }
+
+  .zoom-prev:hover,
+  .zoom-next:hover {
+    background: #f5f1e9;
+    color: #0c0c0b;
+  }
 }
 
 /* Inquiry sheet */

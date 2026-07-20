@@ -343,7 +343,7 @@ export const catalogProducts: CatalogProduct[] = [
   {
     id: "extra-lizard-s",
     collection: "Extraordinary",
-    color: "?",
+    color: "Вереск",
     size: "S",
     materials: "Кожа ящерицы, кожа козы, замша козы",
     metal: "Никель",
