@@ -7,7 +7,9 @@ const publicDir = path.join(rootDir, ".output", "public");
 const serverEntry = path.join(rootDir, ".output", "server", "index.mjs");
 
 const repositoryName = process.env.GITHUB_REPOSITORY?.split("/")[1] ?? "spree-vision-forge";
-const basePath = process.env.GITHUB_PAGES === "true" ? `/${repositoryName}/` : "/";
+const hasGitHubPagesCustomDomain = process.env.GITHUB_PAGES_CUSTOM_DOMAIN === "true";
+const basePath =
+  process.env.GITHUB_PAGES === "true" && !hasGitHubPagesCustomDomain ? `/${repositoryName}/` : "/";
 const renderUrl = new URL(basePath, "https://example.com");
 
 const { default: handler } = await import(pathToFileURL(serverEntry).href);
