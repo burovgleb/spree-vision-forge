@@ -135,9 +135,10 @@
 
   @media (max-width: 767px) {
     .mobile-full-bleed {
-      width: 100vw;
+      width: auto;
+      min-width: 0;
       max-width: none;
-      margin-inline: calc(50% - 50vw);
+      margin-inline: -1.5rem;
     }
   }
 
